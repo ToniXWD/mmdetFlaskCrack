@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}
+    上传单张图片
+{% endblock %}
+{% block head %}
+    <style>
+        .thresh{
+            width: 40px;
+        }
+    </style>
+{% endblock %}
+{% block name %}
+    裂缝检测系统
+{% endblock %}
+{% block body %}
+    <div>
+        <form method="post" action="{{ url_for('return_result_web') }}" enctype="multipart/form-data">
+            <b class="text-info">模型选择</b>
+            <select class="list-group" name="modelType" id="">
+                <option value="m2fSwinS">Mask2former(Swin Transformer small)</option>
+                <option value="m2fSwinT" selected>Mask2former(Swin Transformer tiny)</option>
+                <option value="m2fR101">Mask2former(ResNet101)</option>
+                <option value="m2fR50">Mask2former(ResNet50)</option>
+                <option value="yolactR101">Yolact(ResNet101)</option>
+{#                <option value="yolactR50">Yolact(ResNet50)</option>#}
+{#                <option value="maskRcnnR101">Mask-RCNN(ResNet101)</option>#}
+{#                <option value="maskRcnnR50">Mask-RCNN(ResNet50)</option>#}
+                <option value="msR101">Mask-Scoring-RCNN(ResNet101)</option>
+{#                <option value="msR50">Mask-Scoring-RCNN(ResNet50)</option>#}
+            </select>
+            <br>
+            <b class="text-info">阈值输入</b><input type="text" class="thresh" name="thresh" placeholder="0.5" width="3px">
+            <br>
+            <br>
+            <p1>阈值说明：①模型将滤除概率低于阈值的目标，不填此项将采用系统默认值。②对于Yolact模型，推荐阈值为0.3；其余模型阈值推荐0.5以上</p1>
+            <br>
+            <br>
+            <input type="file" value="选择检测图片" size="22" id="select_files" name="input_image"
+                   onchange="show_selectedImage()"/>
+            <input type="submit" class="button-new" value="提交信息" style="margin-top:15px;"/>
+            <br>
+            <br>
+            <canvas id="image_canvas" height="660" width="990"></canvas>
+            <text name="image_className" value=""/>
+            <br>
+        </form>
+
+        <script type="text/javascript">
+            function show_selectedImage() {
+                /// get select files.
+                var selected_files = document.getElementById("select_files").files;
+                for (var file of selected_files) {
+                    console.log(file.webkitRelativePath);
+                    /// read file content.
+                    var reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onloadend = function () {
+                        /// deal data.
+                        var img = new Image();
+                        /// after loader, result storage the file content result.
+                        img.src = this.result;
+                        img.onload = function () {
+                            var canvas = document.getElementById("image_canvas");
+                            var cxt = canvas.getContext('2d');
+                            cxt.drawImage(img, 0, 0);
+                        }
+                    }
+                }
+            }
+        </script>
+    </div>
+{% endblock %}

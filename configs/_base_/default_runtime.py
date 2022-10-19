@@ -11,7 +11,9 @@ custom_hooks = [dict(type='NumClassCheckHook')]
 
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-load_from = None
+# load_from = 'weights/mask2former_r50.pth'
+load_from = 'weights/mask2former_swin-t.pth'
+# load_from = None
 resume_from = None
 workflow = [('train', 1)]
 
@@ -25,3 +27,4 @@ mp_start_method = 'fork'
 #       or not by default.
 #   - `base_batch_size` = (8 GPUs) x (2 samples per GPU).
 auto_scale_lr = dict(enable=False, base_batch_size=16)
+device = 'cuda'

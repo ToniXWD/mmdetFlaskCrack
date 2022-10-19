@@ -280,7 +280,11 @@ class BaseDetector(BaseModule, metaclass=ABCMeta):
                     win_name='',
                     show=False,
                     wait_time=0,
-                    out_file=None):
+                    out_file=None,
+                    out_dir = None,
+                    remove = False,
+                    self_nms = False,
+                    ):
         """Draw `result` over `img`.
 
         Args:
@@ -309,6 +313,7 @@ class BaseDetector(BaseModule, metaclass=ABCMeta):
         Returns:
             img (Tensor): Only if not `show` or `out_file`
         """
+        img_path = img
         img = mmcv.imread(img)
         img = img.copy()
         if isinstance(result, tuple):
@@ -337,9 +342,10 @@ class BaseDetector(BaseModule, metaclass=ABCMeta):
         # draw bounding boxes
         img = imshow_det_bboxes(
             img,
-            bboxes,
-            labels,
-            segms,
+            img_path=img_path,
+            bboxes=bboxes,
+            labels=labels,
+            segms=segms,
             class_names=self.CLASSES,
             score_thr=score_thr,
             bbox_color=bbox_color,
@@ -350,7 +356,11 @@ class BaseDetector(BaseModule, metaclass=ABCMeta):
             win_name=win_name,
             show=show,
             wait_time=wait_time,
-            out_file=out_file)
+            out_file=out_file,
+            remove=remove,
+            out_dir=out_dir,
+            self_nms=self_nms,
+        )
 
         if not (show or out_file):
             return img

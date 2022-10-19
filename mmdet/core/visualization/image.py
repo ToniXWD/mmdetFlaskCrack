@@ -1,16 +1,20 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+import os
 import cv2
 import matplotlib.pyplot as plt
 import mmcv
 import numpy as np
 import pycocotools.mask as mask_util
+import torch
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
-
 from mmdet.core.evaluation.panoptic_utils import INSTANCE_OFFSET
 from ..mask.structures import bitmap_to_polygon
 from ..utils import mask2ndarray
 from .palette import get_palette, palette_val
+from tools.remove_child_crack import remove as remove_small
+from torchvision.ops import nms
+import time
 
 __all__ = [
     'color_val_matplotlib', 'draw_masks', 'draw_bboxes', 'draw_labels',
@@ -139,6 +143,7 @@ def draw_labels(ax,
         label_text = class_names[
             label] if class_names is not None else f'class {label}'
         if scores is not None:
+            label_text += str(i)
             label_text += f'|{scores[i]:.02f}'
         text_color = color[i] if isinstance(color, list) else color
 
@@ -204,6 +209,7 @@ def draw_masks(ax, img, masks, color=None, with_edge=True, alpha=0.8):
 
 
 def imshow_det_bboxes(img,
+                      img_path,
                       bboxes=None,
                       labels=None,
                       segms=None,
@@ -217,7 +223,10 @@ def imshow_det_bboxes(img,
                       win_name='',
                       show=True,
                       wait_time=0,
-                      out_file=None):
+                      out_file=None,
+                      out_dir = None,
+                      remove = False,
+                      self_nms = False):
     """Draw bboxes and class labels (with scores) on an image.
 
     Args:
@@ -272,6 +281,28 @@ def imshow_det_bboxes(img,
         labels = labels[inds]
         if segms is not None:
             segms = segms[inds, ...]
+            if self_nms:
+                print("进行自定义的NMS操作")
+                nms_begin = time.time()
+                real_bboxes = bboxes[:, :4]
+                real_score = bboxes[:, 4]
+                nms_inds = nms(torch.from_numpy(real_bboxes),torch.from_numpy(real_score), self_nms).numpy()
+                bboxes = bboxes[nms_inds]
+                labels = labels[nms_inds]
+                segms = segms[nms_inds]
+                nms_end = time.time()
+                print("自定义NMS操作耗时{}".format(nms_end-nms_begin))
+            if remove:
+                valid_mask = remove_small(bboxes, remove_thresh=0.2)
+                print("移除了{}个小目标".format(valid_mask.shape[0]-valid_mask.sum()))
+                bboxes=bboxes[valid_mask]
+                segms=segms[valid_mask]
+            if not show and isinstance(img_path, str):
+                np_save_name = img_path.split('/')[-1].split('.')[0]
+                np_save_name_mask = os.path.join(out_dir, (np_save_name +'_mask.npy'))
+                np_save_name_bbox = os.path.join(out_dir, (np_save_name +'_bbox.npy'))
+                np.save(np_save_name_mask, segms)
+                np.save(np_save_name_bbox, bboxes)
 
     img = mmcv.bgr2rgb(img)
     width, height = img.shape[1], img.shape[0]

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>裂缝检测系统3.0</title>
+    </head>
+    <body>
+    <int>选择要检测的裂缝图片(jpg、jpeg、png),选择后点击下方的提交信息</int>
+        <div>
+            <form method="post" action="Http://x3498181z6.vicp.fun/upload_image" enctype="multipart/form-data">
+               <input type="file"  value="选择检测图片" size="22" id="select_files" name="input_image" onchange="show_selectedImage()"/>
+               <br>
+               <canvas id="image_canvas" height="800" width="800"></canvas>
+               <text name="image_className" value=""/>
+               <br>
+               <input type="submit" class="button-new" value="提交信息" style="margin-top:15px;"/>
+            </form>
+
+            <script type="text/javascript">
+                function show_selectedImage(){
+                    /// get select files.
+                    var selected_files = document.getElementById("select_files").files;
+                    for(var file of selected_files){
+                        console.log(file.webkitRelativePath);
+                        /// read file content.
+                        var reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onloadend = function(){
+                            /// deal data.
+                            var img = new Image();
+                            /// after loader, result storage the file content result.
+                            img.src = this.result;
+                            img.onload = function(){
+                                var canvas = document.getElementById("image_canvas");
+                                var cxt = canvas.getContext('2d');
+                                cxt.drawImage(img, 0, 0);
+                            }
+                        }
+                    }
+                }
+            </script>
+        </div>
+    </body>
+</html>

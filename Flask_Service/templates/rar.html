@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}
+系统首页
+{% endblock %}
+{% block head %}
+
+{% endblock %}
+{% block name %}
+裂缝检测系统
+{% endblock %}
+{% block body %}
+<br><b>此功能暂未开放</b>
+<form method="post" action="Http://x3498181z6.vicp.fun/upload_image" enctype="multipart/form-data">
+    <input type="file" value="选择批量图片压缩文件" size="22" id="select_files" name="input_image"
+           onchange="show_selectedImage()"/>
+    <br>
+    <text name="image_className" value=""/>
+    <br>
+    <input type="submit" class="button-new" value="提交信息" style="margin-top:15px;"/>
+</form>
+{% endblock %}

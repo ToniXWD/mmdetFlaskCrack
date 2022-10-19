@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}
+    登录
+{% endblock %}
+{% block head %}
+    <style>
+        #centreInf {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+        }
+    </style>
+    {% if result==1 %}
+        <script>
+            alert("密码错误，请重试")
+        </script>
+    {% elif result==2 %}
+        <script>
+            alert("此账户已注册过，请登录!")
+        </script>
+    {% elif result==3 %}
+        <script>
+            alert("注册成功，请登录!")
+        </script>
+    {% elif result==4 %}
+        <script>
+            alert("此功能需要登录!")
+        </script>
+    {% endif %}
+{% endblock %}
+{% block name %}
+    裂缝检测系统
+{% endblock %}
+{% block body %}
+    <div id="centreInf">
+        <form action="{{ url_for("user.login") }}" method="POST">
+            <div class="form-group">
+                <label for="exampleInputEmail1">登录邮箱地址</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                       name="email">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                    else.</small>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">密码</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+{% endblock %}

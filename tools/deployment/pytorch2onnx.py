@@ -223,14 +223,18 @@ def parse_normalize_cfg(test_pipeline):
 def parse_args():
     parser = argparse.ArgumentParser(
         description='Convert MMDetection models to ONNX')
-    parser.add_argument('config', help='test config file path')
-    parser.add_argument('checkpoint', help='checkpoint file')
+    parser.add_argument('--config',
+                        default='../../configs/swin/mask_rcnn_swin-t-p4-w7_fpn_ms-crop-3x_coco.py',
+                        help='test config file path')
+    parser.add_argument('--checkpoint',
+                        default='../../work_dirs/mask2former_s_845/iter_16500_485_280.pth',
+                        help='checkpoint file')
     parser.add_argument('--input-img', type=str, help='Images for input')
     parser.add_argument(
         '--show',
         action='store_true',
         help='Show onnx graph and detection outputs')
-    parser.add_argument('--output-file', type=str, default='tmp.onnx')
+    parser.add_argument('--output-file', type=str, default='../../weights/mask2former_s_no_post.onnx')
     parser.add_argument('--opset-version', type=int, default=11)
     parser.add_argument(
         '--test-img', type=str, default=None, help='Images for test')
@@ -253,6 +257,7 @@ def parse_args():
         type=int,
         nargs='+',
         default=[800, 1216],
+        # default=[800, 1216],
         help='input image size')
     parser.add_argument(
         '--mean',
@@ -280,6 +285,7 @@ def parse_args():
         'is allowed.')
     parser.add_argument(
         '--dynamic-export',
+        default=True,
         action='store_true',
         help='Whether to export onnx with dynamic axis.')
     parser.add_argument(

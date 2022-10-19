@@ -1,5 +1,5 @@
 _base_ = ['./mask2former_r50_lsj_8x2_50e_coco-panoptic.py']
-num_things_classes = 80
+num_things_classes = 1
 num_stuff_classes = 0
 num_classes = num_things_classes + num_stuff_classes
 model = dict(
@@ -59,8 +59,8 @@ dataset_type = 'CocoDataset'
 data_root = 'data/coco/'
 data = dict(
     _delete_=True,
-    samples_per_gpu=2,
-    workers_per_gpu=2,
+    samples_per_gpu=3,
+    workers_per_gpu=4,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'annotations/instances_train2017.json',

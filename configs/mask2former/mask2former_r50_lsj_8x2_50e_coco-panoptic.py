@@ -218,18 +218,21 @@ optimizer = dict(
         norm_decay_mult=0.0))
 optimizer_config = dict(grad_clip=dict(max_norm=0.01, norm_type=2))
 
+max_iters = 11800
+# max_iters = 368750
+
 # learning policy
 lr_config = dict(
     policy='step',
     gamma=0.1,
     by_epoch=False,
-    step=[327778, 355092],
+    step=[int(max_iters*0.75), int(max_iters*0.9)],
+    # step=[327778, 355092],
     warmup='linear',
     warmup_by_epoch=False,
     warmup_ratio=1.0,  # no warmup
     warmup_iters=10)
 
-max_iters = 368750
 runner = dict(type='IterBasedRunner', max_iters=max_iters)
 
 log_config = dict(
@@ -238,10 +241,11 @@ log_config = dict(
         dict(type='TextLoggerHook', by_epoch=False),
         dict(type='TensorboardLoggerHook', by_epoch=False)
     ])
-interval = 5000
+interval = 295
 workflow = [('train', interval)]
 checkpoint_config = dict(
-    by_epoch=False, interval=interval, save_last=True, max_keep_ckpts=3)
+    by_epoch=False, interval=interval, save_last=True, max_keep_ckpts=100)
+    # by_epoch=False, interval=interval, save_last=True, max_keep_ckpts=3)
 
 # Before 365001th iteration, we do evaluation every 5000 iterations.
 # After 365000th iteration, we do evaluation every 368750 iterations,

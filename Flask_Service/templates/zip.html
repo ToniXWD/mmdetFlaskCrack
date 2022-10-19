@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}
+上传压缩文件
+{% endblock %}
+{% block head %}
+
+{% endblock %}
+{% block name %}
+裂缝检测系统
+{% endblock %}
+{% block body %}
+<!--<br><b>此功能尚不完善</b>-->
+<form method="post" action="{{ url_for('return_result_web') }}" enctype="multipart/form-data">
+    <input type="file" value="" size="22" id="select_files" name="input_image"
+           onchange="show_selectedImage()"/>
+    <br>
+    <div class="form-group">
+{#        <label for="exampleaccept">接收邮箱地址</label>#}
+        <b class="text-info">模型选择</b>
+            <select class="list-group" name="modelType" id="">
+                <option value="m2fSwinS">Mask2former(Swin Transformer small)</option>
+                <option value="m2fSwinT" selected>Mask2former(Swin Transformer tiny)</option>
+                <option value="m2fR101">Mask2former(ResNet101)</option>
+                <option value="m2fR50">Mask2former(ResNet50)</option>
+                <option value="yolactR101">Yolact(ResNet101)</option>
+{#                <option value="yolactR50">Yolact(ResNet50)</option>#}
+{#                <option value="maskRcnnSwinS">Mask-RCNN(Swin Transformer small)</option>#}
+{#                <option value="maskRcnnSwinT">Mask-RCNN(Swin Transformer tiny)</option>#}
+{#                <option value="maskRcnnR101">Mask-RCNN(ResNet101)</option>#}
+{#                <option value="maskRcnnR50">Mask-RCNN(ResNet50)</option>#}
+                <option value="msR101">Mask-Scoring-RCNN(ResNet101)</option>
+{#                <option value="msR50">Mask-Scoring-RCNN(ResNet50)</option>#}
+            </select>
+            <br>
+            <b class="text-info">阈值输入</b><input class="text" type="text" name="thresh" placeholder="0.5" width="3">
+            <br>
+            <br>
+            <p1>阈值说明：①模型将滤除概率低于阈值的目标，不填此项将采用系统默认值。②对于Yolact模型，推荐阈值为0.3；其余模型阈值推荐0.5以上</p1>
+            <br>
+{#        <input type="values" class="form-control" id="exampleaccept" aria-describedby="emailacceptHelp" name="acceptemail">#}
+{#        <small id="emailacceptHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>#}
+    </div>
+    <br>
+    <text name="image_className" value=""/>
+    <li>压缩文件仅支持zip格式</li>
+    <br>
+    <li> 若出现404错误等信息，请刷新网页</li>
+    <br>
+    <li>压缩文件内部结构为单个文件夹，单个文件夹下为png、jpg、jpeg、JPG格式的图片，实例如下图所示</li>
+    <br>
+    <img class="img-thumbnail" src="../static/htmlStatic/zipStructure.jpg" alt="图片错误">
+    <br>
+    <br>
+    <input type="submit" class="button-new" value="提交信息" style="margin-top:15px;"/>
+    <br>
+    <br>
+    <a href="{{ url_for("user.zipOut") }}">{{ link }}</a>
+</form>
+{% endblock %}

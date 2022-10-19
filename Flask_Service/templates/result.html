@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}
+    检测结果
+{% endblock %}
+{% block head %}
+
+{% endblock %}
+{% block name %}
+    裂缝检测系统
+{% endblock %}
+{% block body %}
+    <h2>图片分割结果</h2>
+    <img class="img-responsive" alt="1" src={{ img }}/>
+{#    <img class="img-responsive" alt="1" src="../static/temp.png"/>#}
+
+    <table class="table">
+        <caption class="caption"><h2>裂缝尺寸信息</h2></caption>
+        <tr>
+            <th>序号</th>
+            <th>原始面积</th>
+            <th>修正面积</th>
+            <th>长度</th>
+            <th>宽度</th>
+        </tr>
+        {% if result %}
+        {% for i in result %}
+            <tr>
+                {% for j in i %}
+                    <td>{{ j }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    {% endif %}
+    </table>
+
+
+    <!--</ul>-->
+{% endblock %}
